@@ -2,13 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ApiResource]
+#[Get(security: "is_granted('ROLE_ADMIN', object)")]
+#[GetCollection(security: "is_granted('ROLE_ADMIN')")]
+#[Delete(security: "is_granted('ROLE_ADMIN')")]
+#[Post]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,6 +30,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private ?string $email = null;
 
     /**
@@ -29,7 +44,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Website>
+     */
+    #[ORM\OneToMany(targetEntity: Website::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $websites;
+
+    public function __construct()
+    {
+        $this->websites = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,5 +131,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Website>
+     */
+    public function getWebsites(): Collection
+    {
+        return $this->websites;
+    }
+
+    public function addWebsite(Website $website): static
+    {
+        if (!$this->websites->contains($website)) {
+            $this->websites->add($website);
+            $website->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWebsite(Website $website): static
+    {
+        if ($this->websites->removeElement($website)) {
+            // set the owning side to null (unless already changed)
+            if ($website->getUser() === $this) {
+                $website->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
