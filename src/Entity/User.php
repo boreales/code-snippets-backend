@@ -21,7 +21,7 @@ use ApiPlatform\Metadata\GetCollection;
 #[Get(security: "is_granted('ROLE_ADMIN', object)")]
 #[GetCollection(security: "is_granted('ROLE_ADMIN')")]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
-#[Post]
+#[Post(security: "is_granted('PUBLIC_ACCESS')")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
