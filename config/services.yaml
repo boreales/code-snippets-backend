@@ -30,3 +30,6 @@ services:
             $security: '@security.helper'
         tags:
             - { name: 'kernel.event_subscriber' }
+
+    App\DataProviders\WebsiteCollectionDataProvider:
+        tags: ['api_platform.state_provider']
