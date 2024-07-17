@@ -11,9 +11,9 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use App\Entity\Website;
+use App\Entity\Snippet;
 
-class SetDefaultUserToWebsite implements EventSubscriberInterface
+class SetDefaultUserToSnippet implements EventSubscriberInterface
 {
     private Security $security;
 
@@ -34,7 +34,7 @@ class SetDefaultUserToWebsite implements EventSubscriberInterface
         $entity = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if (!$entity instanceof Website || $method !== 'POST') {
+        if (!$entity instanceof Snippet || $method !== 'POST') {
             return;
         }
 

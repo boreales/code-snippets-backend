@@ -9,23 +9,23 @@ namespace App\DataProviders;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\Pagination\Pagination;
 use ApiPlatform\State\ProviderInterface;
-use App\Repository\WebsiteRepository;
+use App\Repository\SnippetRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class WebsiteCollectionDataProvider implements ProviderInterface
+class SnippetCollectionDataProvider implements ProviderInterface
 {
-    private $websiteRepository;
+    private $snippetRepository;
     private $security;
 
-    public function __construct(WebsiteRepository $websiteRepository, Security $security)
+    public function __construct(SnippetRepository $snippetRepository, Security $security)
     {
-        $this->websiteRepository = $websiteRepository;
+        $this->snippetRepository = $snippetRepository;
         $this->security = $security;
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|null|object
     {
-        return $this->websiteRepository->findBy(['user' => $this->security->getUser()]);
+        return $this->snippetRepository->findBy(['user' => $this->security->getUser()]);
     }
 }
 

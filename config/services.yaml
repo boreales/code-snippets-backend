@@ -25,11 +25,11 @@ services:
     Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher:
         public: true
 
-    App\EventListener\SetDefaultUserToWebsite:
+    App\EventListener\SetDefaultUserToSnippet:
         arguments:
             $security: '@security.helper'
         tags:
             - { name: 'kernel.event_subscriber' }
 
-    App\DataProviders\WebsiteCollectionDataProvider:
+    App\DataProviders\SnippetCollectionDataProvider:
         tags: ['api_platform.state_provider']

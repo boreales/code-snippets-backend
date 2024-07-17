@@ -48,15 +48,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /**
-     * @var Collection<int, Website>
+     * @var Collection<int, Snippet>
      */
-    #[ORM\OneToMany(targetEntity: Website::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $websites;
+    #[ORM\OneToMany(targetEntity: Snippet::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $snippets;
 
     public function __construct()
     {
-        $this->websites = new ArrayCollection();
+        $this->snippets = new ArrayCollection();
     }
+
+//    /**
+//     * @var Collection<int, Website>
+//     */
+//    #[ORM\OneToMany(targetEntity: Website::class, mappedBy: 'user', orphanRemoval: true)]
+//    private Collection $websites;
+//
+//    public function __construct()
+//    {
+//        $this->websites = new ArrayCollection();
+//    }
 
     public function getId(): ?int
     {
@@ -133,33 +144,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * @return Collection<int, Website>
-     */
-    public function getWebsites(): Collection
-    {
-        return $this->websites;
+//    /**
+//     * @return Collection<int, Website>
+//     */
+//    public function getWebsites(): Collection
+//    {
+//        return $this->websites;
+//    }
+//
+//    public function addWebsite(Website $website): static
+//    {
+//        if (!$this->websites->contains($website)) {
+//            $this->websites->add($website);
+//            $website->setUser($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeWebsite(Website $website): static
+//    {
+//        if ($this->websites->removeElement($website)) {
+//            // set the owning side to null (unless already changed)
+//            if ($website->getUser() === $this) {
+//                $website->setUser(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
+
+/**
+ * @return Collection<int, Snippet>
+ */
+public function getSnippets(): Collection
+{
+    return $this->snippets;
+}
+
+public function addSnippet(Snippet $snippet): static
+{
+    if (!$this->snippets->contains($snippet)) {
+        $this->snippets->add($snippet);
+        $snippet->setUser($this);
     }
 
-    public function addWebsite(Website $website): static
-    {
-        if (!$this->websites->contains($website)) {
-            $this->websites->add($website);
-            $website->setUser($this);
+    return $this;
+}
+
+public function removeSnippet(Snippet $snippet): static
+{
+    if ($this->snippets->removeElement($snippet)) {
+        // set the owning side to null (unless already changed)
+        if ($snippet->getUser() === $this) {
+            $snippet->setUser(null);
         }
-
-        return $this;
     }
 
-    public function removeWebsite(Website $website): static
-    {
-        if ($this->websites->removeElement($website)) {
-            // set the owning side to null (unless already changed)
-            if ($website->getUser() === $this) {
-                $website->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+    return $this;
+}
 }
